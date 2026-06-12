@@ -8,5 +8,9 @@
     {
         "user_id": "12345",
         "name": "Brian Ngoyoni"
+    },
+    {
+        "user_id": "000",
+        "name": "Eric"
     }
 ]
