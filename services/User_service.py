@@ -22,5 +22,27 @@ class UserService:
             json.dump(users, f, indent=4)
         self.users = users
 
+    def update_user(self, user_id, name=None):
+        users = self._load_users()
+        for user in users:
+            if user['user_id'] == user_id:
+                if name is not None:
+                    user['name'] = name
+                with open(self.file_path, 'w', encoding='utf-8') as f:
+                    json.dump(users, f, indent=4)
+                self.users = users
+                return True
+        return False
+
+    def delete_user(self, user_id):
+        users = self._load_users()
+        updated_users = [user for user in users if user['user_id'] != user_id]
+        if len(updated_users) == len(users):
+            return False
+        with open(self.file_path, 'w', encoding='utf-8') as f:
+            json.dump(updated_users, f, indent=4)
+        self.users = updated_users
+        return True
+
     def save_users(self, user):
         self.save_user(user)

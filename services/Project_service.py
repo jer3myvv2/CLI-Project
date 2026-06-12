@@ -33,3 +33,38 @@ class ProjectService:
             json.dump(projects, f, indent=4)
 
         return project._to_dict()
+
+    def update_project(self, project_id, name=None, description=None, user_id=None):
+        try:
+            with open(self.file_path, 'r', encoding='utf-8') as f:
+                projects = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return False
+
+        for project in projects:
+            if project['project_id'] == project_id:
+                if name is not None:
+                    project['name'] = name
+                if description is not None:
+                    project['description'] = description
+                if user_id is not None:
+                    project['user_id'] = user_id
+                with open(self.file_path, 'w', encoding='utf-8') as f:
+                    json.dump(projects, f, indent=4)
+                return True
+        return False
+
+    def delete_project(self, project_id):
+        try:
+            with open(self.file_path, 'r', encoding='utf-8') as f:
+                projects = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            return False
+
+        updated_projects = [project for project in projects if project['project_id'] != project_id]
+        if len(updated_projects) == len(projects):
+            return False
+
+        with open(self.file_path, 'w', encoding='utf-8') as f:
+            json.dump(updated_projects, f, indent=4)
+        return True

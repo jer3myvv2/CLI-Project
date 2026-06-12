@@ -13,9 +13,13 @@ def run_dashboard():
         print("1. Create User")
         print("2. Create Project")
         print("3. View Projects by User")
-        print("4. Exit")
-        
-        choice = input("Select an option (1-4): ")
+        print("4. Edit User")
+        print("5. Delete User")
+        print("6. Edit Project")
+        print("7. Delete Project")
+        print("8. Exit")
+
+        choice = input("Select an option (1-8): ")
         
         if choice == '1':
             user_id = input("Enter user ID: ").strip()
@@ -54,6 +58,42 @@ def run_dashboard():
                     print(f"- {project['project_id']}: {project['name']} ({project['description']})")
             
         elif choice == '4':
+            user_id = input("Enter user ID to edit: ").strip()
+            name = input("Enter new user name (leave blank to keep current): ").strip()
+            if not user_id:
+                print("User ID is required.")
+                continue
+            updated = user_service.update_user(user_id, name or None)
+            print("User updated successfully!" if updated else "User not found.")
+
+        elif choice == '5':
+            user_id = input("Enter user ID to delete: ").strip()
+            if not user_id:
+                print("User ID is required.")
+                continue
+            deleted = user_service.delete_user(user_id)
+            print("User deleted successfully!" if deleted else "User not found.")
+
+        elif choice == '6':
+            project_id = input("Enter project ID to edit: ").strip()
+            name = input("Enter new project name (leave blank to keep current): ").strip()
+            description = input("Enter new project description (leave blank to keep current): ").strip()
+            user_id = input("Enter new user ID (leave blank to keep current): ").strip()
+            if not project_id:
+                print("Project ID is required.")
+                continue
+            updated = project_service.update_project(project_id, name=name or None, description=description or None, user_id=user_id or None)
+            print("Project updated successfully!" if updated else "Project not found.")
+
+        elif choice == '7':
+            project_id = input("Enter project ID to delete: ").strip()
+            if not project_id:
+                print("Project ID is required.")
+                continue
+            deleted = project_service.delete_project(project_id)
+            print("Project deleted successfully!" if deleted else "Project not found.")
+
+        elif choice == '8':
             print("Exiting...")
             break
         else:
