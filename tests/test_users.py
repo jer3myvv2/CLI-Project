@@ -35,6 +35,13 @@ class TestUserService(unittest.TestCase):
         with open(self.test_file, 'r') as f:
             self.assertEqual(json.load(f), [])
 
+    def test_update_user_handles_malformed_records(self):
+        with open(self.test_file, 'w') as f:
+            json.dump([{"name": "Broken"}], f)
+
+        self.assertFalse(self.service.update_user("u1", "Safe"))
+        self.assertFalse(self.service.delete_user("u1"))
+
     def tearDown(self):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)

@@ -7,6 +7,16 @@ class ProjectService:
         self.file_path = file_path
         os.makedirs(os.path.dirname(file_path) or '.', exist_ok=True)
 
+    def get_all_projects(self):
+        if not os.path.exists(self.file_path):
+            return []
+
+        with open(self.file_path, 'r', encoding='utf-8') as f:
+            try:
+                return json.load(f)
+            except json.JSONDecodeError:
+                return []
+
     def get_projects_by_user(self, user_id):
         """Filters projects by user_id from the JSON file."""
         if not os.path.exists(self.file_path):
@@ -42,16 +52,17 @@ class ProjectService:
             return False
 
         for project in projects:
-            if project['project_id'] == project_id:
-                if name is not None:
-                    project['name'] = name
-                if description is not None:
-                    project['description'] = description
-                if user_id is not None:
-                    project['user_id'] = user_id
-                with open(self.file_path, 'w', encoding='utf-8') as f:
-                    json.dump(projects, f, indent=4)
-                return True
+            if not isinstance(project, dict) or project.get('project_id') != project_id:
+                continue
+            if name is not None:
+                project['name'] = name
+            if description is not None:
+                project['description'] = description
+            if user_id is not None:
+                project['user_id'] = user_id
+            with open(self.file_path, 'w', encoding='utf-8') as f:
+                json.dump(projects, f, indent=4)
+            return True
         return False
 
     def delete_project(self, project_id):
@@ -61,7 +72,7 @@ class ProjectService:
         except (FileNotFoundError, json.JSONDecodeError):
             return False
 
-        updated_projects = [project for project in projects if project['project_id'] != project_id]
+        updated_projects = [project for project in projects if isinstance(project, dict) and project.get('project_id') != project_id]
         if len(updated_projects) == len(projects):
             return False
 

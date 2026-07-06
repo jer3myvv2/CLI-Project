@@ -36,6 +36,13 @@ class TestProjectService(unittest.TestCase):
         with open(self.test_file, 'r') as f:
             self.assertEqual(json.load(f), [])
 
+    def test_update_delete_project_handles_malformed_records(self):
+        with open(self.test_file, 'w') as f:
+            json.dump([{"name": "Broken"}], f)
+
+        self.assertFalse(self.service.update_project("p1", name="Safe"))
+        self.assertFalse(self.service.delete_project("p1"))
+
     def tearDown(self):
         if os.path.exists(self.test_file):
             os.remove(self.test_file)

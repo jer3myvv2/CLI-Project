@@ -1,16 +1,9 @@
 [
     {
-        "project_id": "AW12",
-        "name": "food app",
-        "description": "create food app",
-        "user_id": "ss1",
-        "tasks": []
-    },
-    {
         "project_id": "2435",
-        "name": "Buy shoes",
-        "description": "Go to Kicks kenya",
-        "user_id": "12345",
+        "name": "Buy a Car",
+        "description": "A new Mazda cx-5",
+        "user_id": "2445",
         "tasks": []
     }
 ]

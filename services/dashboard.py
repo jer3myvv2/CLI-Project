@@ -39,13 +39,15 @@ def run_dashboard():
         print_message("1. Create User", "green")
         print_message("2. Create Project", "green")
         print_message("3. View Projects by User", "green")
-        print_message("4. Edit User", "green")
-        print_message("5. Delete User", "green")
-        print_message("6. Edit Project", "green")
-        print_message("7. Delete Project", "green")
-        print_message("8. Exit", "green")
+        print_message("4. List All Users", "green")
+        print_message("5. List All Projects", "green")
+        print_message("6. Edit User", "green")
+        print_message("7. Delete User", "green")
+        print_message("8. Edit Project", "green")
+        print_message("9. Delete Project", "green")
+        print_message("10. Exit", "green")
 
-        choice = input("Select an option (1-8): ")
+        choice = input("Select an option (1-10): ")
         
         if choice == '1':
             user_id = input("Enter user ID: ").strip()
@@ -84,6 +86,24 @@ def run_dashboard():
                     print_message(f"- {project['project_id']}: {project['name']} ({project['description']})", "magenta")
             
         elif choice == '4':
+            users_list = user_service.get_all_users()
+            if not users_list:
+                print_message("No users found.", "yellow")
+            else:
+                print_message("\nAll users:", "bold cyan")
+                for user in users_list:
+                    print_message(f"- {user.get('user_id', 'N/A')}: {user.get('name', 'N/A')}", "magenta")
+
+        elif choice == '5':
+            projects_list = project_service.get_all_projects()
+            if not projects_list:
+                print_message("No projects found.", "yellow")
+            else:
+                print_message("\nAll projects:", "bold cyan")
+                for project in projects_list:
+                    print_message(f"- {project.get('project_id', 'N/A')}: {project.get('name', 'N/A')} ({project.get('description', 'N/A')})", "magenta")
+
+        elif choice == '6':
             user_id = input("Enter user ID to edit: ").strip()
             name = input("Enter new user name (leave blank to keep current): ").strip()
             if not user_id:
@@ -92,7 +112,7 @@ def run_dashboard():
             updated = user_service.update_user(user_id, name or None)
             print_message("User updated successfully!" if updated else "User not found.", "bold green" if updated else "red")
 
-        elif choice == '5':
+        elif choice == '7':
             user_id = input("Enter user ID to delete: ").strip()
             if not user_id:
                 print_message("User ID is required.", "red")
@@ -100,7 +120,7 @@ def run_dashboard():
             deleted = user_service.delete_user(user_id)
             print_message("User deleted successfully!" if deleted else "User not found.", "bold green" if deleted else "red")
 
-        elif choice == '6':
+        elif choice == '8':
             project_id = input("Enter project ID to edit: ").strip()
             name = input("Enter new project name (leave blank to keep current): ").strip()
             description = input("Enter new project description (leave blank to keep current): ").strip()
@@ -111,7 +131,7 @@ def run_dashboard():
             updated = project_service.update_project(project_id, name=name or None, description=description or None, user_id=user_id or None)
             print_message("Project updated successfully!" if updated else "Project not found.", "bold green" if updated else "red")
 
-        elif choice == '7':
+        elif choice == '9':
             project_id = input("Enter project ID to delete: ").strip()
             if not project_id:
                 print_message("Project ID is required.", "red")
@@ -119,7 +139,7 @@ def run_dashboard():
             deleted = project_service.delete_project(project_id)
             print_message("Project deleted successfully!" if deleted else "Project not found.", "bold green" if deleted else "red")
 
-        elif choice == '8':
+        elif choice == '10':
             print_message("Exiting...", "yellow")
             break
         else:
